@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Поиск рейсов{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Найти рейс</h1>
+
+<div id="bannerCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      {% for banner in banners %}
+      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+        <img src="{{ banner.image.url }}" class="d-block w-100" alt="{{ banner.title }}">
+      </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+
+  <h2 class="mb-3">Featured Offers</h2>
+  <div class="row">
+    {% for offer in offers %}
+    <div class="col-md-4 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ offer.title }}</h5>
+          <p class="card-text">{{ offer.description }}</p>
+          <p class="card-text"><strong>{{ offer.flight.origin }} → {{ offer.flight.destination }}</strong></p>
+          <p class="card-text"><strong>Цена:</strong> {{ offer.flight.price }} сом</p>
+          <a href="{% url 'flight_detail' offer.flight.pk %}" class="btn btn-primary">Подробнее</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+<form method="get" class="row g-3 mb-4">
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Поиск</button>
+</form>
+
+{% if flights %}
+    <h2>Результаты:</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Компания</th>
+                <th>Откуда</th>
+                <th>Куда</th>
+                <th>Вылет</th>
+                <th>Прилет</th>
+                <th>Цена</th>
+                <th>Доступные места</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for flight in flights %}
+            <tr>
+                <td>{{ flight.company.name }}</td>
+                <td>{{ flight.origin }}</td>
+                <td>{{ flight.destination }}</td>
+                <td>{{ flight.departure_time }}</td>
+                <td>{{ flight.arrival_time }}</td>
+                <td>{{ flight.price }}</td>
+                <td>{{ flight.seats_available }}</td>
+                <td>
+                    <a href="{% url 'flight_detail' flight.pk %}" class="btn btn-primary btn-sm">Подробнее</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% elif flights is not none %}
+    <p>Рейсов не найдено.</p>
+{% endif %}
+{% endblock %}

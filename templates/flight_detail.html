@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Детали рейса{% endblock %}
+
+{% block content %}
+<h1>Детали рейса</h1>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">{{ flight.company.name }}: {{ flight.origin }} → {{ flight.destination }}</h5>
+        <p class="card-text"><strong>Вылет:</strong> {{ flight.departure_time }}</p>
+        <p class="card-text"><strong>Прилет:</strong> {{ flight.arrival_time }}</p>
+        <p class="card-text"><strong>Длительность:</strong> {{ flight.duration }}</p>
+        <p class="card-text"><strong>Пересадки:</strong> {{ flight.stops }}</p>
+        <p class="card-text"><strong>Цена:</strong> {{ flight.price }} сом</p>
+        <p class="card-text"><strong>Доступные места:</strong> {{ flight.seats_available }}</p>
+        <a href="#" class="btn btn-success">Купить</a>
+    </div>
+</div>
+
+<a href="{% url 'landing' %}" class="btn btn-secondary">Назад к поиску</a>
+{% endblock %}
