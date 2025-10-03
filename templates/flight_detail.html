@@ -14,7 +14,14 @@
         <p class="card-text"><strong>Пересадки:</strong> {{ flight.stops }}</p>
         <p class="card-text"><strong>Цена:</strong> {{ flight.price }} сом</p>
         <p class="card-text"><strong>Доступные места:</strong> {{ flight.seats_available }}</p>
-        <a href="#" class="btn btn-success">Купить</a>
+        {% if user.is_authenticated %}
+            <form action="{% url 'create_booking' flight.pk %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Booking</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-warning">Войдите, чтобы забронировать</a>
+        {% endif %}
     </div>
 </div>
 

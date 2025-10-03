@@ -1,0 +1,6 @@
+<h1>Бронирование успешно оплачено!</h1>
+<p>Номер бронирования: {{ booking.confirmation_id }}</p>
+<p>Рейс: {{ booking.flight.origin }} → {{ booking.flight.destination }}</p>
+<p>Количество пассажиров: {{ booking.passengers_count }}</p>
+<p>Сумма: {{ booking.total_price }} сом</p>
+<p>Статус: {{ booking.status }}</p>

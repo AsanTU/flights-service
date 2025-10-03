@@ -1,0 +1,7 @@
+<h1>Бронирование рейса {{ flight.origin }} → {{ flight.destination }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.passengers_count.label_tag }} {{ form.passengers_count }}
+    <button type="submit">Забронировать</button>
+</form>

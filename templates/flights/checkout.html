@@ -1,0 +1,9 @@
+<h1>Оплата бронирования {{ booking.confirmation_id }}</h1>
+<p>Рейс: {{ booking.flight.origin }} → {{ booking.flight.destination }}</p>
+<p>Пассажиров: {{ booking.passengers_count }}</p>
+<p>Сумма к оплате: {{ booking.total_price }} сом</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Оплатить</button>
+</form>

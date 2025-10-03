@@ -34,6 +34,16 @@ class Flight(models.Model):
     seats_available = models.PositiveIntegerField()
     is_active = models.BooleanField(default=True)
 
+    def save(self, *args, **kwargs):
+        if self.departure_time and self.arrival_time:
+            self.duration = self.arrival_time - self.departure_time
+        super().save(*args, **kwargs)
+
+    def save_seats(self, *args, **kwargs):
+        if self.seats_available is None:  
+            self.seats_available = self.seats_total
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.company.name}: {self.origin} → {self.destination}"
 
@@ -52,9 +62,15 @@ class Booking(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="PENDING")
     confirmation_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    paid_at = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.confirmation_id:
+            self.confirmation_id = uuid.uuid4().hex[:12]
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Booking {self.confirmation_id} ({self.user.username})"
+        return f"Booking {self.confirmation_id} - {self.status}"
 
 class Banner(models.Model):
     title = models.CharField(max_length=200, blank=True)
@@ -68,7 +84,7 @@ class Banner(models.Model):
         return self.title or f"Banner {self.id}"
 
 class FeaturedOffer(models.Model):
-    flight = models.ForeignKey("Flight", on_delete=models.CASCADE)
+    flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
 
