@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Форма рейса{% endblock %}
+{% block content %}
+<h1>{% if object %}Редактирование рейса{% else %}Добавить рейс{% endif %}</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+{% endblock %}

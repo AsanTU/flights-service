@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Мои бронирования{% endblock %}
+
+{% block content %}
+<h2>Мои бронирования</h2>
+
+<div class="mb-3">
+    <a href="?status=active" class="btn btn-success btn-sm">Активные</a>
+    <a href="?status=past" class="btn btn-secondary btn-sm">Прошедшие</a>
+    <a href="{% url 'user_bookings' %}" class="btn btn-info btn-sm">Все</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Рейс</th>
+            <th>Дата вылета</th>
+            <th>Пассажиров</th>
+            <th>Сумма</th>
+            <th>Статус</th>
+            <th>Код</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in bookings %}
+        <tr>
+            <td>{{ booking.flight.origin }} → {{ booking.flight.destination }}</td>
+            <td>{{ booking.flight.departure_time }}</td>
+            <td>{{ booking.passengers_count }}</td>
+            <td>{{ booking.total_price }} сом</td>
+            <td>{{ booking.get_status_display }}</td>
+            <td>{{ booking.confirmation_id }}</td>
+        </tr>
+        <div class="card mb-2">
+            <div class="card mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">{{ booking.flight.company.name }}: {{ booking.flight.origin }} → {{ booking.flight.destination }}</h5>
+                  <p class="card-text"><strong>Дата вылета:</strong> {{ booking.flight.departure_time }}</p>
+                  <p class="card-text"><strong>Статус:</strong> {{ booking.status }}</p>
+            
+                  {% if booking.status == "PENDING" or booking.status == "PAID" %}
+                    <form method="post" action="{% url 'cancel_booking' booking.id %}" onsubmit="return confirm('Вы уверены, что хотите отменить бронирование?');">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger">Отменить</button>
+                    </form>
+                  {% endif %}
+                </div>
+              </div>
+        {% empty %}
+        <tr>
+            <td colspan="6">Нет бронирований</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

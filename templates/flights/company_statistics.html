@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика компании{% endblock %}
+
+{% block content %}
+<h1>Статистика компании</h1>
+
+<form method="get">
+    <select name="period" onchange="this.form.submit()">
+      <option value="today" {% if period == "today" %}selected{% endif %}>Сегодня</option>
+      <option value="week" {% if period == "week" %}selected{% endif %}>Эта неделя</option>
+      <option value="month" {% if period == "month" %}selected{% endif %}>Этот месяц</option>
+      <option value="all" {% if period == "all" %}selected{% endif %}>Все</option>
+    </select>
+</form>
+
+<ul class="list-group">
+    <li class="list-group-item">Всего рейсов: {{ total_flights }}</li>
+    <li class="list-group-item">Предстоящие: {{ upcoming }}</li>
+    <li class="list-group-item">Завершённые: {{ completed }}</li>
+    <li class="list-group-item">Пассажиров (оплачено): {{ total_passengers }}</li>
+    <li class="list-group-item">Общий доход: {{ total_revenue }} сом</li>
+</ul>
+{% endblock %}

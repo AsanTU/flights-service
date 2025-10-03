@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Удаление рейса{% endblock %}
+{% block content %}
+<h1>Удалить рейс #{{ object.id }}?</h1>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Да, удалить</button>
+    <a href="{% url 'flight_list' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

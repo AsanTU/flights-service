@@ -1,0 +1,6 @@
+<h2>Забронировать рейс: {{ flight.origin }} → {{ flight.destination }}</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">Забронировать</button>
+</form>
