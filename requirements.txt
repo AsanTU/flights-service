@@ -2,6 +2,7 @@ asgiref==3.8.1
 certifi==2025.4.26
 cffi==1.17.1
 charset-normalizer==3.4.2
+cloudinary==1.44.1
 crispy-bootstrap4==2024.10
 crispy-bootstrap5==2025.4
 cryptography==45.0.2
@@ -9,6 +10,7 @@ dj-database-url==3.0.1
 dj-rest-auth==7.0.1
 Django==5.2
 django-allauth==65.7.0
+django-cloudinary-storage==0.3.0
 django-crispy-forms==2.4
 django-extensions==4.1
 django-heroku==0.3.1
@@ -23,6 +25,7 @@ psycopg2==2.9.10
 pycparser==2.22
 PyJWT==2.10.1
 requests==2.32.3
+six==1.17.0
 sqlparse==0.5.3
 urllib3==2.4.0
 whitenoise==6.11.0
