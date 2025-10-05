@@ -11,11 +11,15 @@ Django==5.2
 django-allauth==65.7.0
 django-crispy-forms==2.4
 django-extensions==4.1
+django-heroku==0.3.1
 django-widget-tweaks==1.5.0
 djangorestframework==3.16.0
+gunicorn==23.0.0
 idna==3.10
 numpy==2.3.3
+packaging==25.0
 pillow==11.2.1
+psycopg2==2.9.10
 pycparser==2.22
 PyJWT==2.10.1
 requests==2.32.3
