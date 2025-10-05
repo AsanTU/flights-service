@@ -13,8 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # -------------------------
 SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_for_dev')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = ['flights-service.herokuapp.com']
-
+ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS', '*')]
 # -------------------------
 # APPS
 # -------------------------
