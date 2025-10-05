@@ -92,7 +92,7 @@ class Booking(models.Model):
 
 class Banner(models.Model):
     title = models.CharField(max_length=200, blank=True)
-    image_url = models.URLField()
+    image = models.ImageField(upload_to="banners/")
     order = models.PositiveIntegerField(default=0)
 
     class Meta:
