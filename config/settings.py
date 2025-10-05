@@ -101,10 +101,6 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MEDIA_DIR = "media/banners"
 
-for filename in os.listdir(MEDIA_DIR):
-    filepath = os.path.join(MEDIA_DIR, filename)
-    cloudinary.uploader.upload(filepath, folder="banners")
-
 # -------------------------
 # AUTH
 # -------------------------
