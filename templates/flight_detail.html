@@ -1,29 +1,115 @@
 {% extends "base.html" %}
-
-{% block title %}Детали рейса{% endblock %}
+{% block title %}Flight Details{% endblock %}
 
 {% block content %}
-<h1>Детали рейса</h1>
+<div style="min-height: 100vh; background-color: #F8F9FA; display: flex; justify-content: center; align-items: flex-start; padding: 40px;">
+    <div style="
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+        max-width: 700px;
+        width: 100%;
+        padding: 30px 40px;
+        position: relative;
+        border-left: 10px solid #1E90FF;
+        transition: transform 0.3s ease;
+    " 
+    onmouseover="this.style.transform='translateY(-5px)';" 
+    onmouseout="this.style.transform='translateY(0)';">
 
-<div class="card mb-3">
-    <div class="card-body">
-        <h5 class="card-title">{{ flight.company.name }}: {{ flight.origin }} → {{ flight.destination }}</h5>
-        <p class="card-text"><strong>Вылет:</strong> {{ flight.departure_time }}</p>
-        <p class="card-text"><strong>Прилет:</strong> {{ flight.arrival_time }}</p>
-        <p class="card-text"><strong>Длительность:</strong> {{ flight.duration }}</p>
-        <p class="card-text"><strong>Пересадки:</strong> {{ flight.stops }}</p>
-        <p class="card-text"><strong>Цена:</strong> {{ flight.price }} сом</p>
-        <p class="card-text"><strong>Доступные места:</strong> {{ flight.seats_available }}</p>
-        {% if user.is_authenticated %}
-            <form action="{% url 'create_booking' flight.pk %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-success">Booking</button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}" class="btn btn-warning">Войдите, чтобы забронировать</a>
-        {% endif %}
+        <h2 style="
+            color: #212529;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+            letter-spacing: 1px;
+        ">{{ flight.company.name }}: {{ flight.origin }} → {{ flight.destination }}</h2>
+
+        <ul style="list-style: none; padding: 0; font-size: 16px; line-height: 1.6; color: #212529;">
+            <li><strong>Departure:</strong> {{ flight.departure_time }}</li>
+            <li><strong>Arrival:</strong> {{ flight.arrival_time }}</li>
+            <li><strong>Duration:</strong> {{ flight.duration }}</li>
+            <li><strong>Transfers:</strong> {{ flight.stops }}</li>
+            <li><strong>Price:</strong> {{ flight.price }} сом</li>
+            <li><strong>Available seates:</strong> 
+                {% if flight.seats_available > 0 %}
+                    <span style="color: #28A745; font-weight: 600;">{{ flight.seats_available }}</span>
+                {% else %}
+                    <span style="color: #DC3545; font-weight: 600;">0</span>
+                {% endif %}
+            </li>
+        </ul>
+
+        <div style="margin-top: 30px; text-align: center;">
+            {% if user.is_authenticated %}
+                {% if flight.seats_available > 0 %}
+                    <form action="{% url 'create_booking' flight.pk %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" style="
+                            background: linear-gradient(135deg, #1E90FF, #17A2B8);
+                            color: white;
+                            font-weight: 600;
+                            padding: 12px 25px;
+                            border: none;
+                            border-radius: 12px;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                        "
+                        onmouseover="this.style.background='linear-gradient(135deg, #138496, #1C86EE)'; this.style.transform='scale(1.05)';"
+                        onmouseout="this.style.background='linear-gradient(135deg, #1E90FF, #17A2B8)'; this.style.transform='scale(1)';">
+                            Book
+                        </button>
+                    </form>
+                {% else %}
+                    <button style="
+                        background-color: #E9ECEF; 
+                        color: #6C757D;
+                        padding: 12px 25px;
+                        border-radius: 12px;
+                        border: none;
+                        cursor: not-allowed;
+                    ">There are no seats</button>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'login' %}" style="
+                    background-color: #FF7F50;
+                    color: white;
+                    padding: 12px 25px;
+                    border-radius: 12px;
+                    text-decoration: none;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                "
+                onmouseover="this.style.backgroundColor='#FF6347'; transform: scale(1.05);"
+                onmouseout="this.style.backgroundColor='#FF7F50'; transform: scale(1);">
+                    Log in to book
+                </a>
+            {% endif %}
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="{% url 'landing' %}" style="
+                color: #1E90FF;
+                text-decoration: none;
+                font-weight: 500;
+                transition: all 0.2s ease;
+            "
+            onmouseover="this.style.textDecoration='underline';"
+            onmouseout="this.style.textDecoration='none';">
+                ← Back to the search
+            </a>
+        </div>
+
+        <div style="
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            border-radius: 4px;
+            background: #28A745;
+        "></div>
     </div>
 </div>
-
-<a href="{% url 'landing' %}" class="btn btn-secondary">Назад к поиску</a>
 {% endblock %}

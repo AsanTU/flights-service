@@ -1,10 +1,53 @@
 {% extends "base.html" %}
-{% block title %}Форма рейса{% endblock %}
+
+{% block title %}Flight form{% endblock %}
+
 {% block content %}
-<h1>{% if object %}Редактирование рейса{% else %}Добавить рейс{% endif %}</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Сохранить</button>
-</form>
+<div class="w-100 min-vh-100 d-flex justify-content-center align-items-start bg-neutral py-5">
+    <div class="card shadow-lg rounded-4 w-75 p-5 bg-white">
+        <h1 class="text-primary fw-bold mb-4">
+            {% if object %}Flight Editing{% else %}Add a flight{% endif %}
+        </h1>
+
+        <form method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label fw-semibold text-dark">{{ field.label }}</label>
+
+                    {% if field.name == "is_active" %}
+                        <div class="form-check">
+                            {{ field }}
+                            <label class="form-check-label" for="{{ field.id_for_label }}">Active</label>
+                        </div>
+
+                    {% elif field.name == "flight_class" %}
+                        <select name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-select">
+                            {% for value, label in field.field.choices %}
+                                <option value="{{ value }}" {% if field.value == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+
+                    {% else %}
+                        {{ field }}
+                    {% endif %}
+
+                    {% if field.errors %}
+                        <div class="text-danger mt-1">
+                            {{ field.errors|striptags }}
+                        </div>
+                    {% endif %}
+                    {% if field.help_text %}
+                        <div class="form-text text-secondary">{{ field.help_text }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary px-5 py-2 shadow-sm">
+                Save
+            </button>
+        </form>
+    </div>
+</div>
 {% endblock %}

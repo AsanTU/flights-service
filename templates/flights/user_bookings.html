@@ -1,57 +1,72 @@
 {% extends "base.html" %}
-
-{% block title %}Мои бронирования{% endblock %}
+{% block title %}My reservations{% endblock %}
 
 {% block content %}
-<h2>Мои бронирования</h2>
+<div style="background-color: #F8F9FA; min-height: 100vh; padding: 40px 20px;">
 
-<div class="mb-3">
-    <a href="?status=active" class="btn btn-success btn-sm">Активные</a>
-    <a href="?status=past" class="btn btn-secondary btn-sm">Прошедшие</a>
-    <a href="{% url 'user_bookings' %}" class="btn btn-info btn-sm">Все</a>
-</div>
+    <h2 style="color: #212529; font-weight: 700; text-align:center; margin-bottom: 30px;">My reservations</h2>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Рейс</th>
-            <th>Дата вылета</th>
-            <th>Пассажиров</th>
-            <th>Сумма</th>
-            <th>Статус</th>
-            <th>Код</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for booking in bookings %}
-        <tr>
-            <td>{{ booking.flight.origin }} → {{ booking.flight.destination }}</td>
-            <td>{{ booking.flight.departure_time }}</td>
-            <td>{{ booking.passengers_count }}</td>
-            <td>{{ booking.total_price }} сом</td>
-            <td>{{ booking.get_status_display }}</td>
-            <td>{{ booking.confirmation_id }}</td>
-        </tr>
-        <div class="card mb-2">
-            <div class="card mb-3">
-                <div class="card-body">
-                  <h5 class="card-title">{{ booking.flight.company.name }}: {{ booking.flight.origin }} → {{ booking.flight.destination }}</h5>
-                  <p class="card-text"><strong>Дата вылета:</strong> {{ booking.flight.departure_time }}</p>
-                  <p class="card-text"><strong>Статус:</strong> {{ booking.status }}</p>
-            
-                  {% if booking.status == "PENDING" or booking.status == "PAID" %}
-                    <form method="post" action="{% url 'cancel_booking' booking.id %}" onsubmit="return confirm('Вы уверены, что хотите отменить бронирование?');">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-danger">Отменить</button>
+    <div style="text-align:center; margin-bottom: 30px;">
+        <a href="?status=active" class="btn btn-success btn-sm {% if status_filter == 'active' %}active{% endif %}" 
+            style="margin: 0 5px; border-radius: 10px; font-weight:600; padding:8px 18px;">Active</a>
+        <a href="?status=past" class="btn btn-secondary btn-sm {% if status_filter == 'past' %}active{% endif %}" 
+            style="margin: 0 5px; border-radius: 10px; font-weight:600; padding:8px 18px;">Past</a>
+        <a href="{% url 'user_bookings' %}" class="btn btn-info btn-sm {% if not status_filter %}active{% endif %}" 
+            style="margin: 0 5px; border-radius: 10px; font-weight:600; padding:8px 18px;">All</a>
+    </div>
+
+    {% for booking in bookings %}
+    <div style="
+        background: white; 
+        border-radius: 20px; 
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+        margin-bottom: 25px; 
+        overflow: hidden; 
+        transition: transform 0.3s ease;
+    " onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
+
+        <div style="padding: 25px 30px; border-left: 8px solid {% if booking.status in 'PENDING,PAID' %}#28A745{% else %}#DC3545{% endif %};">
+            <h5 style="color: #1E90FF; font-weight: 700; margin-bottom: 10px;">
+                {{ booking.flight.company.name }}: {{ booking.flight.origin }} → {{ booking.flight.destination }}
+            </h5>
+
+            <p style="color:#212529; font-weight:600;">Departure date: <span style="color:#17A2B8;">{{ booking.flight.departure_time }}</span></p>
+            <p style="color:#212529; font-weight:600;">Passengers: <span style="color:#FF7F50;">{{ booking.passengers_count }}</span></p>
+            <p style="color:#212529; font-weight:600;">Amount: <span style="color:#28A745;">{{ booking.total_price }} сом</span></p>
+            <p style="color:#212529; font-weight:600;">Status: 
+                <span style="color:{% if booking.status == 'PAID' %}#28A745{% elif booking.status == 'CANCELLED' %}#DC3545{% else %}#17A2B8{% endif %};">
+                    {{ booking.get_status_display }}
+                </span>
+            </p>
+            <p style="color:#6C757D; font-weight:500;">Booking code: {{ booking.confirmation_id }}</p>
+
+            {% if booking.status == "PENDING" or booking.status == "PAID" %}
+                {% if booking.can_cancel %}
+                    <form method="post" action="{% url 'cancel_booking' booking.id %}" style="margin-top:15px;" onsubmit="return confirm('Are you sure you want to cancel your reservation?');">
+                        {% csrf_token %}
+                        <button type="submit" style="
+                            background: linear-gradient(135deg, #FF7F50, #FF6347); 
+                            border:none; 
+                            color:white; 
+                            padding:10px 20px; 
+                            border-radius:12px; 
+                            font-weight:600; 
+                            cursor:pointer; 
+                            transition: transform 0.3s ease, box-shadow 0.3s ease;
+                        " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.2)';"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 10px rgba(0,0,0,0.1)';">
+                            Cancel
+                        </button>
                     </form>
-                  {% endif %}
-                </div>
-              </div>
-        {% empty %}
-        <tr>
-            <td colspan="6">Нет бронирований</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                {% else %}
+                    <p style="color:#6C757D; margin-top:15px;">You can cancel only 24 hours before departure.</p>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <p style="text-align:center; color:#6C757D; font-weight:600;">No bookings</p>
+    {% endfor %}
+
+</div>
 {% endblock %}

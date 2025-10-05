@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Users with reservations{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5" style="background-color: #F8F9FA;">
+    <div class="text-center mb-5">
+        <h1 class="display-3 fw-bold" style="color: #1E90FF; text-shadow: 2px 2px 6px rgba(0,0,0,0.1);">
+            Users with reservations
+        </h1>
+        <p class="lead" style="color: #6C757D;">All your company's current bookings</p>
+    </div>
+
+    {% if users_with_bookings %}
+    <div class="row g-4">
+        {% for entry in users_with_bookings %}
+        <div class="col-12">
+            <div class="card shadow-xl rounded-5 border-0 mb-4" style="background: linear-gradient(145deg, #ffffff, #E9ECEF); transform-style: preserve-3d; perspective: 1000px;">
+                <div class="card-header rounded-top-5 p-3 d-flex justify-content-between align-items-center"
+                     style="background: linear-gradient(135deg, #1E90FF, #17A2B8); color: #ffffff; text-shadow: 1px 1px 3px rgba(0,0,0,0.3);">
+                    <div>
+                        <h4 class="mb-1">{{ entry.user.get_full_name }}</h4>
+                        <small>{{ entry.user.email }}</small>
+                    </div>
+                    <span class="badge bg-success fs-6">Bookings: {{ entry.bookings|length }}</span>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for booking in entry.bookings %}
+                        <li class="list-group-item d-flex flex-column flex-md-row justify-content-between align-items-start mb-3 rounded-4 shadow-sm"
+                            style="background: #ffffff; transition: transform 0.3s, box-shadow 0.3s;">
+                            <div>
+                                <strong>Flight:</strong> {{ booking.flight.origin }} → {{ booking.flight.destination }}<br>
+                                <strong>Departure date:</strong> {{ booking.flight.departure_time|date:"d.m.Y H:i" }}<br>
+                                <strong>Passengers:</strong> {{ booking.passengers_count }}
+                            </div>
+                            <div class="mt-2 mt-md-0 d-flex flex-column align-items-end">
+                                {% if booking.status == "PAID" %}
+                                    <span class="badge bg-success fs-6 mb-1">{{ booking.status }}</span>
+                                {% elif booking.status == "PENDING" %}
+                                    <span class="badge bg-info fs-6 mb-1">{{ booking.status }}</span>
+                                {% elif booking.status == "CANCELED" %}
+                                    <span class="badge bg-danger fs-6 mb-1">{{ booking.status }}</span>
+                                {% elif booking.status == "REFUNDED" %}
+                                    <span class="badge bg-secondary fs-6 mb-1">{{ booking.status }}</span>
+                                {% endif %}
+                                <span class="badge bg-primary fs-6">Цена: {{ booking.total_price }} сом</span>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center fs-5 shadow-lg" role="alert"
+         style="background: linear-gradient(135deg, #FF7F50, #FF6347); color: #ffffff; border-radius: 1rem;">
+         There are no users with reservations.
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.card-body li:hover {
+    transform: translateY(-6px) rotateX(1deg) rotateY(2deg);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+}
+
+h1, h4 {
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+}
+
+.badge {
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.list-group-item {
+    border: 1px solid #E9ECEF;
+}
+</style>
+{% endblock %}

@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import uuid
+from companies.models import Company
 
 class User(AbstractUser):
+    is_manager = models.BooleanField(default=False)
     ROLE_CHOICES = [
         ("admin", "Admin"),
         ("manager", "Manager"),
@@ -14,9 +16,8 @@ class User(AbstractUser):
         return f"{self.username} ({self.role})"
 
 class Company(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    slug = models.SlugField(unique=True)
-    manager = models.ForeignKey(User, on_delete=models.CASCADE, related_name="companies")
+    name = models.CharField(max_length=255)
+    managers = models.ManyToManyField(User, related_name="companies")
 
     def __str__(self):
         return self.name
@@ -34,6 +35,25 @@ class Flight(models.Model):
     seats_available = models.PositiveIntegerField()
     is_active = models.BooleanField(default=True)
 
+    ECONOMY = 'economy'
+    COMFORT = 'comfort'
+    BUSINESS = 'business'
+    FLIGHT_CLASSES = [
+        (ECONOMY, 'Economy'),
+        (COMFORT, 'Comfort'),
+        (BUSINESS, 'Business'),
+    ]
+    flight_class = models.CharField(max_length=10, choices=FLIGHT_CLASSES, default=ECONOMY)
+
+    return_flight = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.SET_NULL, related_name='return_of'
+    )
+
+    def __str__(self):
+        return f"{self.company.name}: {self.origin} → {self.destination}" + (
+            f" (round-trip)" if self.return_flight else ""
+        )
+
     def save(self, *args, **kwargs):
         if self.departure_time and self.arrival_time:
             self.duration = self.arrival_time - self.departure_time
@@ -43,9 +63,6 @@ class Flight(models.Model):
         if self.seats_available is None:  
             self.seats_available = self.seats_total
         super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f"{self.company.name}: {self.origin} → {self.destination}"
 
 class Booking(models.Model):
     STATUS_CHOICES = [
@@ -63,6 +80,7 @@ class Booking(models.Model):
     confirmation_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     paid_at = models.DateTimeField(null=True, blank=True)
+    notification_sent = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.confirmation_id:

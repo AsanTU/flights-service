@@ -1,7 +1,80 @@
-<h1>Бронирование рейса {{ flight.origin }} → {{ flight.destination }}</h1>
+{% extends "base.html" %}
+{% block title %}Flight booking{% endblock %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.passengers_count.label_tag }} {{ form.passengers_count }}
-    <button type="submit">Забронировать</button>
-</form>
+{% block content %}
+<div style="min-height: 100vh; background-color: #F8F9FA; display: flex; justify-content: center; align-items: flex-start; padding: 50px 20px;">
+
+    <div style="
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+        max-width: 500px;
+        width: 100%;
+        padding: 40px 30px;
+        position: relative;
+        border-left: 8px solid #1E90FF;
+        transition: transform 0.3s ease;
+    " onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
+
+        <h2 style="
+            text-align: center;
+            color: #212529;
+            margin-bottom: 25px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        ">Flight booking {{ flight.origin }} → {{ flight.destination }}</h2>
+
+        <form method="post" style="display: flex; flex-direction: column; gap: 25px;">
+            {% csrf_token %}
+
+            <label for="{{ form.passengers_count.id_for_label }}" style="
+                font-weight: 600;
+                color: #212529;
+                margin-bottom: 5px;
+            ">{{ form.passengers_count.label }}</label>
+            {{ form.passengers_count }}
+
+            <button type="submit" style="
+                background: linear-gradient(135deg, #1E90FF, #17A2B8);
+                color: white;
+                font-weight: 600;
+                padding: 12px 0;
+                border: none;
+                border-radius: 12px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            " 
+            onmouseover="this.style.background='linear-gradient(135deg, #138496, #1C86EE)'; this.style.transform='scale(1.05)';" 
+            onmouseout="this.style.background='linear-gradient(135deg, #1E90FF, #17A2B8)'; this.style.transform='scale(1)';">
+                Book
+            </button>
+        </form>
+
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="{% url 'landing' %}" style="
+                text-decoration: none;
+                color: #FF7F50;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            "
+            onmouseover="this.style.color='#FF6347'; text-decoration: underline;"
+            onmouseout="this.style.color='#FF7F50'; text-decoration: none;">
+                ← Back to the search
+            </a>
+        </div>
+
+        <div style="
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            border-radius: 4px;
+            background: #28A745;
+        "></div>
+
+    </div>
+</div>
+{% endblock %}

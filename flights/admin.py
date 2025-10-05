@@ -8,13 +8,13 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ("role", "is_staff", "is_active")
     search_fields = ("username", "email")
 
-
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ("name", "slug", "manager")
-    prepopulated_fields = {"slug": ("name",)}
-    search_fields = ("name",)
+    list_display = ("id", "name", "get_managers")
 
+    def get_managers(self, obj):
+        return ", ".join([u.username for u in obj.managers.all()])
+    get_managers.short_description = "Managers"
 
 @admin.register(Flight)
 class FlightAdmin(admin.ModelAdmin):

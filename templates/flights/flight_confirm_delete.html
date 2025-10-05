@@ -1,10 +1,72 @@
 {% extends "base.html" %}
-{% block title %}Удаление рейса{% endblock %}
+{% block title %}Flight removal{% endblock %}
+
 {% block content %}
-<h1>Удалить рейс #{{ object.id }}?</h1>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Да, удалить</button>
-    <a href="{% url 'flight_list' %}" class="btn btn-secondary">Отмена</a>
-</form>
+<div class="w-100 min-vh-100 d-flex justify-content-center align-items-center bg-neutral">
+    <div class="card shadow-lg rounded-4 p-5 w-50 text-center bg-white">
+        <h1 class="text-danger fw-bold mb-4">Delete Flight #{{ object.id }}?</h1>
+        <p class="text-secondary mb-4">This action is irreversible. Confirm the flight deletion.</p>
+
+        <form method="post" class="d-flex justify-content-center gap-3">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger px-4 py-2 shadow-sm fw-semibold">
+                Yes, delete it
+            </button>
+            <a href="{% url 'manager_flight_list' %}" class="btn btn-secondary px-4 py-2 shadow-sm fw-semibold">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>
+
+<style>
+body {
+    background-color: #E9ECEF; 
+}
+
+.card {
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    font-size: 2rem;
+    letter-spacing: 0.5px;
+}
+
+p {
+    font-size: 1rem;
+}
+
+.btn-danger {
+    background-color: #DC3545;
+    border-color: #DC3545;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-danger:hover {
+    background-color: #b02a37;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: #6C757D;
+    border-color: #6C757D;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
+
+.btn {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+</style>
 {% endblock %}

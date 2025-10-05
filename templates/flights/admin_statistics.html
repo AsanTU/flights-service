@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}General statistics{% endblock %}
+
+{% block content %}
+<div class="container-fluid min-vh-100 py-5 bg-neutral">
+    <div class="container">
+
+        <h2 class="text-primary fw-bold mb-4">General statistics for all companies</h2>
+
+        <form method="get" class="mb-4 d-flex align-items-center gap-3">
+            <label class="fw-semibold text-dark mb-0">Filter by period:</label>
+            <select name="period" onchange="this.form.submit()" class="form-select w-auto border-info border-2 rounded-3 shadow-sm">
+                <option value="all" {% if period == "all" %}selected{% endif %}>All</option>
+                <option value="today" {% if period == "today" %}selected{% endif %}>Today</option>
+                <option value="week" {% if period == "week" %}selected{% endif %}>Week</option>
+                <option value="month" {% if period == "month" %}selected{% endif %}>Month</option>
+            </select>
+        </form>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card shadow-lg rounded-4 p-4 text-center bg-white">
+                    <h5 class="text-secondary mb-2">Total flights</h5>
+                    <p class="text-primary fw-bold fs-3 mb-0">{{ total_flights }}</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-lg rounded-4 p-4 text-center bg-white">
+                    <h5 class="text-secondary mb-2">Future flights</h5>
+                    <p class="text-info fw-bold fs-3 mb-0">{{ upcoming }}</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-lg rounded-4 p-4 text-center bg-white">
+                    <h5 class="text-secondary mb-2">Completed flights</h5>
+                    <p class="text-success fw-bold fs-3 mb-0">{{ completed }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-lg rounded-4 p-4 text-center bg-white">
+                    <h5 class="text-secondary mb-2">Total passengers</h5>
+                    <p class="text-primary fw-bold fs-3 mb-0">{{ total_passengers }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-lg rounded-4 p-4 text-center bg-white">
+                    <h5 class="text-secondary mb-2">Total revenue</h5>
+                    <p class="text-secondary fw-bold fs-3 mb-0">{{ total_revenue }} сом</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+body {
+    background-color: #E9ECEF;
+}
+
+.card {
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+h2 {
+    letter-spacing: 0.5px;
+}
+
+.form-select:focus {
+    border-color: #17A2B8;
+    box-shadow: 0 0 0 0.2rem rgba(23,162,184,0.25);
+}
+
+@media (max-width: 768px) {
+    .card p {
+        font-size: 1.5rem !important;
+    }
+}
+</style>
+{% endblock %}

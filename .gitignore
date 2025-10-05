@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+db.sqlite3
+/staticfiles/
+/.env
+*.env
+*.log
+*.pot
+*.py[cod]
+*.swp
+*.DS_Store

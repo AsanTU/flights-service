@@ -1,9 +1,78 @@
-<h1>Оплата бронирования {{ booking.confirmation_id }}</h1>
-<p>Рейс: {{ booking.flight.origin }} → {{ booking.flight.destination }}</p>
-<p>Пассажиров: {{ booking.passengers_count }}</p>
-<p>Сумма к оплате: {{ booking.total_price }} сом</p>
+{% extends "base.html" %}
+{% block title %}Booking payment{% endblock %}
 
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Оплатить</button>
-</form>
+{% block content %}
+<div style="min-height: 100vh; background-color: #F8F9FA; display: flex; justify-content: center; align-items: flex-start; padding: 50px 20px;">
+
+    <div style="
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+        max-width: 500px;
+        width: 100%;
+        padding: 40px 30px;
+        position: relative;
+        border-left: 8px solid #17A2B8;
+        transition: transform 0.3s ease;
+    " onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
+
+        <h2 style="
+            text-align: center;
+            color: #212529;
+            margin-bottom: 25px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        ">Booking payment {{ booking.confirmation_id }}</h2>
+
+        <div style="margin-bottom: 30px;">
+            <p style="color: #212529; font-weight: 600;">Flight: <span style="color:#1E90FF;">{{ booking.flight.origin }} → {{ booking.flight.destination }}</span></p>
+            <p style="color: #212529; font-weight: 600;">Passengers: <span style="color:#17A2B8;">{{ booking.passengers_count }}</span></p>
+            <p style="color: #212529; font-weight: 600;">Amount to be paid: <span style="color:#28A745; font-size: 1.2em;">{{ booking.total_price }} сом</span></p>
+        </div>
+
+        <form method="post" style="display: flex; flex-direction: column; gap: 20px;">
+            {% csrf_token %}
+            <button type="submit" style="
+                background: linear-gradient(135deg, #1E90FF, #17A2B8);
+                color: white;
+                font-weight: 700;
+                padding: 12px 0;
+                border: none;
+                border-radius: 12px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            "
+            onmouseover="this.style.background='linear-gradient(135deg, #138496, #1C86EE)'; this.style.transform='scale(1.05)';"
+            onmouseout="this.style.background='linear-gradient(135deg, #1E90FF, #17A2B8)'; this.style.transform='scale(1)';">
+                Pay
+            </button>
+        </form>
+
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="{% url 'user_bookings' %}" style="
+                text-decoration: none;
+                color: #FF7F50;
+                font-weight: 600;
+                transition: all 0.3s ease;
+            "
+            onmouseover="this.style.color='#FF6347'; text-decoration: underline;"
+            onmouseout="this.style.color='#FF7F50'; text-decoration: none;">
+                ← Go back to bookings
+            </a>
+        </div>
+
+        <div style="
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            border-radius: 4px;
+            background: #28A745;
+        "></div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Flights Service{% endblock %}</title>
@@ -7,36 +7,159 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <style>
+        :root {
+            --primary: #1E90FF;
+            --secondary: #FF7F50;
+            --bg: #F8F9FA;
+            --text-primary: #212529;
+            --text-secondary: #6C757D;
+            --error: #DC3545;
+            --success: #28A745;
+            --info: #17A2B8;
+            --neutral: #E9ECEF;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, var(--primary), var(--info));
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .nav-link, .navbar-brand {
+            color: white !important;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: var(--secondary) !important;
+        }
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: var(--info);
+            border-color: var(--info);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .btn-secondary {
+            background-color: var(--secondary);
+            border-color: var(--secondary);
+        }
+        .btn-secondary:hover {
+            background-color: #FF6347;
+        }
+
+        .card {
+            border-radius: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+        }
+
+        .table thead {
+            background: var(--primary);
+            color: white;
+        }
+        .table-hover tbody tr:hover {
+            background-color: var(--neutral);
+        }
+
+        .carousel-item img {
+            border-radius: 1rem;
+            object-fit: cover;
+            height: 350px;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .search-form {
+            background: var(--neutral);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .text-info {
+            color: var(--info) !important;
+        }
+        .text-success {
+            color: var(--success) !important;
+        }
+        .text-error {
+            color: var(--error) !important;
+        }
+
+        a {
+            transition: color 0.3s;
+        }
+        a:hover {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+    </style>
+
     {% block extra_css %}{% endblock %}
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">Flights</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'landing' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Flights</a></li>
+<nav class="navbar navbar-expand-lg navbar-dark px-4">
+    <a class="navbar-brand" href="{% url 'landing' %}">Flights Service</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="{% url 'landing' %}">Home</a></li>
 
-                    {% if user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'user_dashboard' %}">{{ user.username }}</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
-                    {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
+            {% if user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'user_bookings' %}">{{ user.username }}</a></li>
 
-    <div class="container">
-        {% block content %}
-        {% endblock %}
+                {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="btn btn-warning nav-link text-dark" href="{% url 'admin:index' %}">Admin Panel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-success nav-link text-dark" href="{% url 'statistics' %}">Statistics</a>
+                    </li>         
+                {% elif user.is_manager %}
+                    <li class="nav-item"><a class="btn btn-info nav-link text-dark" href="{% url 'manager_dashboard' %}">Manager Panel</a></li>
+                {% endif %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+            {% endif %}
+        </ul>
     </div>
+</nav>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    {% block extra_js %}{% endblock %}
+<div class="container my-5">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<footer>
+    &copy; 2025 Flights Service. All rights reserved.
+</footer>
+{% block extra_js %}{% endblock %}
 </body>
 </html>

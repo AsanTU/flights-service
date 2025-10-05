@@ -1,6 +1,75 @@
-<h1>Бронирование успешно оплачено!</h1>
-<p>Номер бронирования: {{ booking.confirmation_id }}</p>
-<p>Рейс: {{ booking.flight.origin }} → {{ booking.flight.destination }}</p>
-<p>Количество пассажиров: {{ booking.passengers_count }}</p>
-<p>Сумма: {{ booking.total_price }} сом</p>
-<p>Статус: {{ booking.status }}</p>
+{% extends "base.html" %}
+{% block title %}Payment completed successfully{% endblock %}
+
+{% block content %}
+<div style="
+    min-height: 100vh; 
+    background-color: #F8F9FA; 
+    display: flex; 
+    justify-content: center; 
+    align-items: flex-start; 
+    padding: 60px 20px;
+">
+
+    <div style="
+        background: white; 
+        border-radius: 20px; 
+        box-shadow: 0 15px 35px rgba(0,0,0,0.12); 
+        max-width: 600px; 
+        width: 100%; 
+        padding: 40px 30px; 
+        position: relative; 
+        border-left: 8px solid #28A745;
+        transition: transform 0.3s ease;
+    " onmouseover="this.style.transform='translateY(-5px)';" onmouseout="this.style.transform='translateY(0)';">
+
+        <h2 style="
+            text-align: center; 
+            color: #28A745; 
+            font-weight: 800; 
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        ">
+            ✅ The booking has been successfully paid for!
+        </h2>
+
+        <div style="margin-bottom: 30px; display: flex; flex-direction: column; gap: 12px;">
+            <p style="color: #212529; font-weight: 600;">Booking number: <span style="color:#1E90FF;">{{ booking.confirmation_id }}</span></p>
+            <p style="color: #212529; font-weight: 600;">Flight: <span style="color:#17A2B8;">{{ booking.flight.origin }} → {{ booking.flight.destination }}</span></p>
+            <p style="color: #212529; font-weight: 600;">Number of passengers: <span style="color:#FF7F50;">{{ booking.passengers_count }}</span></p>
+            <p style="color: #212529; font-weight: 600;">Amount: <span style="color:#28A745; font-size: 1.2em;">{{ booking.total_price }} сом</span></p>
+            <p style="color: #212529; font-weight: 600;">Status: <span style="color:#17A2B8;">{{ booking.status }}</span></p>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{% url 'user_bookings' %}" style="
+                background: linear-gradient(135deg, #1E90FF, #17A2B8);
+                color: white;
+                text-decoration: none;
+                font-weight: 700;
+                padding: 12px 25px;
+                border-radius: 12px;
+                display: inline-block;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                transition: all 0.3s ease;
+            " 
+            onmouseover="this.style.background='linear-gradient(135deg, #138496, #1C86EE)'; this.style.transform='scale(1.05)';"
+            onmouseout="this.style.background='linear-gradient(135deg, #1E90FF, #17A2B8)'; this.style.transform='scale(1)';">
+                ← Go back to bookings
+            </a>
+        </div>
+
+        <div style="
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            border-radius: 4px;
+            background: #28A745;
+        "></div>
+
+    </div>
+</div>
+{% endblock %}

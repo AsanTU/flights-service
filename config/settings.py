@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'crispy_forms',
 
     'flights',
+    'companies',
+    'widget_tweaks'
 ]
 
 MIDDLEWARE = [
@@ -140,3 +142,7 @@ AUTH_USER_MODEL = 'flights.User'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 DEFAULT_FROM_EMAIL = 'noreply@flights-service.local'
+USE_TZ = True
+TIME_ZONE = "UTC"
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]
