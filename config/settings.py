@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 import dj_database_url
 import django_heroku
+import cloudinary.uploader
 
 # -------------------------
 # BASE DIR
@@ -97,6 +98,12 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+MEDIA_DIR = "media/banners"
+
+for filename in os.listdir(MEDIA_DIR):
+    filepath = os.path.join(MEDIA_DIR, filename)
+    cloudinary.uploader.upload(filepath, folder="banners")
 
 # -------------------------
 # AUTH
